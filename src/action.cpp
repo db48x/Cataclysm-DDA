@@ -1025,8 +1025,7 @@ action_id handle_action_menu()
             title += ": " + catgname;
         }
 
-        uilist smenu;
-        smenu.settext( title );
+        uilist smenu( title );
         smenu.entries = entries;
         smenu.query();
         const int selection = smenu.ret;
@@ -1083,8 +1082,7 @@ action_id handle_main_menu()
     REGISTER_ACTION( ACTION_SAVE );
     REGISTER_ACTION( ACTION_DEBUG, 'd' );
 
-    uilist smenu;
-    smenu.settext( _( "MAIN MENU" ) );
+    uilist smenu( _( "MAIN MENU" ) );
     smenu.entries = entries;
     smenu.query();
     int selection = smenu.ret;
