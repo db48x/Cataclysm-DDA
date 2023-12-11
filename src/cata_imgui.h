@@ -178,5 +178,3 @@ class list_selector : public popup
         std::vector<litem> items;
 };
 } // namespace cataimgui
-
-

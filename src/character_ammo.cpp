@@ -121,9 +121,9 @@ item::reload_option Character::select_ammo( const item_location &base,
 
     std::string name = name_override.empty() ? base->tname() : name_override;
     uilist menu;
-    menu.text = string_format( base->is_watertight_container() ? _( "Refill %s" ) :
-                               base->has_flag( flag_RELOAD_AND_SHOOT ) ? _( "Select ammo for %s" ) : _( "Reload %s" ),
-                               name );
+    menu.set_title( string_format( base->is_watertight_container() ? _( "Refill %s" ) :
+                                   base->has_flag( flag_RELOAD_AND_SHOOT ) ? _( "Select ammo for %s" ) : _( "Reload %s" ),
+                                   name ) );
 
     // Construct item names
     std::vector<std::string> names;
@@ -190,26 +190,26 @@ item::reload_option Character::select_ammo( const item_location &base,
     };
 
     // Pad the first column including 4 trailing spaces
-    int w = pad( names, utf8_width( menu.text, true ), 6 );
-    menu.text.insert( 0, 2, ' ' ); // add space for UI hotkeys
-    menu.text += std::string( w + 2 - utf8_width( menu.text, true ), ' ' );
+    int w = pad( names, utf8_width( menu.help_text, true ), 6 );
+    menu.help_text.insert( 0, 2, ' ' ); // add space for UI hotkeys
+    menu.help_text += std::string( w + 2 - utf8_width( menu.help_text, true ), ' ' );
 
     // Pad the location similarly (excludes leading "| " and trailing " ")
     w = pad( where, utf8_width( _( "| Location " ) ) - 3, 6 );
-    menu.text += _( "| Location " );
-    menu.text += std::string( w + 3 - utf8_width( _( "| Location " ) ), ' ' );
+    menu.help_text += _( "| Location " );
+    menu.help_text += std::string( w + 3 - utf8_width( _( "| Location " ) ), ' ' );
 
     // Pad the names of target
     w = pad( destination, utf8_width( _( "| Destination " ) ) - 3, 6 );
-    menu.text += _( "| Destination " );
-    menu.text += std::string( w + 3 - utf8_width( _( "| Destination " ) ), ' ' );
+    menu.help_text += _( "| Destination " );
+    menu.help_text += std::string( w + 3 - utf8_width( _( "| Destination " ) ), ' ' );
 
-    menu.text += _( "| Amount  " );
-    menu.text += _( "| Moves   " );
+    menu.help_text += _( "| Amount  " );
+    menu.help_text += _( "| Moves   " );
 
     // We only show ammo statistics for guns and magazines
     if( ( base->is_gun() || base->is_magazine() ) && !base->is_tool() ) {
-        menu.text += _( "| Damage  | Pierce  " );
+        menu.help_text += _( "| Damage  | Pierce  " );
     }
 
     auto draw_row = [&]( int idx ) {

@@ -56,6 +56,11 @@ void cataimgui::client::new_frame()
     ImTui_ImplText_NewFrame();
 
     ImGui::NewFrame();
+
+    // Uncomment this to show some debugging info. In the medium term,
+    // we ought to add a ui_adaptor that shows this information and
+    // which can be toggled on or off.
+    ImGui::ShowMetricsWindow();
 }
 
 void cataimgui::client::end_frame()
@@ -407,7 +412,8 @@ class cataimgui::window_impl : public ui_adaptor
         cataimgui::window *win_base;
         bool is_resized;
     public:
-        explicit window_impl( cataimgui::window *win ) {
+        explicit window_impl(cataimgui::window *win) {
+            is_imgui = true;
             win_base = win;
             is_resized = true;
         }
@@ -442,7 +448,6 @@ cataimgui::window::window( cataimgui::window *parent, int window_flags ) : windo
 cataimgui::window::window( const std::string &title, int window_flags ) : window( window_flags )
 {
     p_impl = new cataimgui::window_impl( this );
-    p_impl->is_imgui = true;
     id = title;
     is_open = true;
 }
