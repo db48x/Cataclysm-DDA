@@ -185,10 +185,7 @@
     "time": "1 h",
     "autolearn": true,
     "qualities": [ { "id": "HAMMER", "level": 1 } ],
-    "components": [
-      [ [ "bone_sturdy", 1, "LIST" ] ],
-      [ [ "water", 1 ], [ "water_clean", 1 ], [ "water_sewage", 1 ], [ "salt_water", 1 ], [ "saline", 5 ] ]
-    ]
+    "components": [ [ [ "bone_sturdy", 1, "LIST" ] ], [ [ "any_water", 1, "LIST" ] ] ]
   },
   {
     "type": "recipe",
@@ -227,9 +224,9 @@
     "time": "30 s",
     "autolearn": true,
     "components": [
-      [ [ "knife_butcher", 1 ] ],
-      [ [ "knife_carving", 1 ] ],
-      [ [ "knife_meat_cleaver", 1 ] ],
+      [ [ "knife_huge", 1 ] ],
+      [ [ "knife_large", 1 ] ],
+      [ [ "knife_cleaver", 1 ] ],
       [ [ "leather", 2 ], [ "cotton_patchwork", 2 ] ],
       [ [ "cordage_short", 2, "LIST" ] ]
     ]
@@ -305,9 +302,8 @@
         [ "platinum_hairpin", 1 ],
         [ "gold_hairpin", 1 ],
         [ "silver_hairpin", 1 ],
-        [ "knife_steak", 1 ],
+        [ "knife_small", 1 ],
         [ "knife_butter", 1 ],
-        [ "knife_paring", 1 ],
         [ "fork", 1 ],
         [ "lc_wire", 1 ],
         [ "hc_wire", 1 ],
@@ -872,11 +868,7 @@
     "book_learn": [ [ "atomic_survival", 0 ], [ "textbook_survival", 0 ] ],
     "qualities": [ { "id": "HAMMER", "level": 1 }, { "id": "ANVIL", "level": 1 } ],
     "proficiencies": [ { "proficiency": "prof_knapping" } ],
-    "components": [
-      [ [ "rock", 2 ] ],
-      [ [ "water", 1 ], [ "water_clean", 1 ], [ "water_sewage", 1 ], [ "salt_water", 1 ], [ "saline", 5 ] ],
-      [ [ "material_sand", 1 ], [ "material_gravel", 1 ] ]
-    ]
+    "components": [ [ [ "rock", 2 ] ], [ [ "any_water", 1, "LIST" ] ], [ [ "material_sand", 1 ], [ "material_gravel", 1 ] ] ]
   },
   {
     "type": "recipe",

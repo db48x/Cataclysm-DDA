@@ -50,7 +50,6 @@
 #include "mondefense.h"
 #include "monfaction.h"
 #include "mongroup.h"
-#include "morale_types.h"
 #include "mtype.h"
 #include "mutation.h"
 #include "npc.h"
@@ -73,6 +72,8 @@
 #include "viewer.h"
 #include "weakpoint.h"
 #include "weather.h"
+
+static const ammo_effect_str_id ammo_effect_WHIP( "WHIP" );
 
 static const anatomy_id anatomy_default_anatomy( "default_anatomy" );
 
@@ -161,6 +162,9 @@ static const mfaction_str_id monfaction_ant( "ant" );
 static const mfaction_str_id monfaction_bee( "bee" );
 static const mfaction_str_id monfaction_nether_player_hate( "nether_player_hate" );
 static const mfaction_str_id monfaction_wasp( "wasp" );
+
+static const morale_type morale_killer_has_killed( "morale_killer_has_killed" );
+static const morale_type morale_killer_need_to_kill( "morale_killer_need_to_kill" );
 
 static const species_id species_AMPHIBIAN( "AMPHIBIAN" );
 static const species_id species_CYBORG( "CYBORG" );
@@ -602,7 +606,7 @@ void monster::try_reproduce()
         if( season_match && female && one_in( chance ) ) {
             int spawn_cnt = rng( 1, type->baby_count );
             if( type->baby_monster ) {
-                here.add_spawn( type->baby_monster, spawn_cnt, pos_bub() );
+                here.add_spawn( type->baby_monster, spawn_cnt, pos_bub(), friendly );
             } else {
                 const item egg( type->baby_egg, *baby_timer );
                 for( int i = 0; i < spawn_cnt; i++ ) {
@@ -1425,8 +1429,7 @@ bool monster::has_intelligence() const
 {
     return has_flag( mon_flag_PATH_AVOID_FALL ) ||
            has_flag( mon_flag_PATH_AVOID_FIRE ) ||
-           has_flag( mon_flag_PATH_AVOID_DANGER_1 ) ||
-           has_flag( mon_flag_PATH_AVOID_DANGER_2 ) ||
+           has_flag( mon_flag_PATH_AVOID_DANGER ) ||
            has_flag( mon_flag_PRIORITIZE_TARGETS ) ||
            get_pathfinding_settings().avoid_sharp ||
            get_pathfinding_settings().avoid_traps;
@@ -2192,7 +2195,7 @@ void monster::deal_projectile_attack( Creature *source, dealt_projectile_attack 
     const auto &effects = proj.proj_effects;
 
     // Whip has a chance to scare wildlife even if it misses
-    if( effects.count( "WHIP" ) && type->in_category( "WILDLIFE" ) && one_in( 3 ) ) {
+    if( effects.count( ammo_effect_WHIP ) && type->in_category( "WILDLIFE" ) && one_in( 3 ) ) {
         add_effect( effect_run, rng( 3_turns, 5_turns ) );
     }
 
@@ -2809,7 +2812,7 @@ void monster::process_turn()
                 }
             }
             if( weather.lightning_active && !has_effect( effect_supercharged ) &&
-                here.is_outside( pos() ) ) {
+                here.is_outside( pos_bub() ) ) {
                 weather.lightning_active = false; // only one supercharge per strike
                 sounds::sound( pos(), 300, sounds::sound_t::combat, _( "BOOOOOOOM!!!" ), false, "environment",
                                "thunder_near" );
@@ -2860,8 +2863,8 @@ void monster::die( Creature *nkiller )
                     const translation snip = SNIPPET.random_from_category( "killer_on_kill" ).value_or( translation() );
                     ch->add_msg_if_player( m_good, "%s", snip );
                 }
-                ch->add_morale( MORALE_KILLER_HAS_KILLED, 5, 10, 6_hours, 4_hours );
-                ch->rem_morale( MORALE_KILLER_NEED_TO_KILL );
+                ch->add_morale( morale_killer_has_killed, 5, 10, 6_hours, 4_hours );
+                ch->rem_morale( morale_killer_need_to_kill );
             }
         }
     }
@@ -3029,7 +3032,7 @@ void monster::die( Creature *nkiller )
                 continue;
             }
 
-            if( here.sees( critter.pos(), pos(), light ) ) {
+            if( here.sees( critter.pos_bub(), pos_bub(), light ) ) {
                 // Anger trumps fear trumps ennui
                 if( critter.type->has_anger_trigger( mon_trigger::FRIEND_DIED ) ) {
                     critter.anger += 15;
@@ -3450,10 +3453,7 @@ void monster::process_effects()
         }
     }
 
-    bool cramped = false;
-    // return is intentionally discarded, sets cramped if appropriate
-    can_move_to_vehicle_tile( get_map().getglobal( pos() ), cramped );
-    if( !cramped ) {
+    if( !will_be_cramped_in_vehicle_tile( get_map().getglobal( pos() ) ) ) {
         remove_effect( effect_cramped_space );
     }
 
@@ -3752,7 +3752,7 @@ void monster::on_hit( Creature *source, bodypart_id,
                 continue;
             }
 
-            if( here.sees( critter.pos(), pos(), light ) ) {
+            if( here.sees( critter.pos_bub(), pos_bub(), light ) ) {
                 // Anger trumps fear trumps ennui
                 if( critter.type->has_anger_trigger( mon_trigger::FRIEND_ATTACKED ) ) {
                     critter.anger += 15;
@@ -3890,7 +3890,7 @@ bool monster::will_join_horde( int size )
     if( mha == MHA_ALWAYS ) {
         return true;
     }
-    if( get_map().has_flag( ter_furn_flag::TFLAG_INDOORS, pos() ) &&
+    if( get_map().has_flag( ter_furn_flag::TFLAG_INDOORS, pos_bub() ) &&
         ( mha == MHA_OUTDOORS || mha == MHA_OUTDOORS_AND_LARGE ) ) {
         return false;
     }
@@ -4033,34 +4033,29 @@ const pathfinding_settings &monster::get_pathfinding_settings() const
     return type->path_settings;
 }
 
-std::unordered_set<tripoint> monster::get_path_avoid() const
+std::function<bool( const tripoint & )> monster::get_path_avoid() const
 {
-    std::unordered_set<tripoint> ret;
-
-    map &here = get_map();
-    int radius = std::min( sight_range( here.ambient_light_at( pos_bub() ) ), 5 );
-
-    for( const tripoint &p : here.points_in_radius( pos(), radius ) ) {
-        if( !can_move_to( p ) ) {
-            if( bash_skill() <= 0 || !here.is_bashable( p ) ) {
-                ret.insert( p );
-            }
+    return [this]( const tripoint & p ) {
+        map &here = get_map();
+        // If we can't move there and can't bash it, don't path through it.
+        if( !can_move_to( p ) && ( bash_skill() <= 0 || !here.is_bashable( p ) ) ) {
+            return true;
         }
-    }
 
-    if( has_flag( mon_flag_PRIORITIZE_TARGETS ) ) {
-        radius = 2;
-    } else if( has_flag( mon_flag_PATH_AVOID_DANGER_1 ) ||
-               has_flag( mon_flag_PATH_AVOID_DANGER_2 ) ) {
-        radius = 1;
-    } else {
-        return ret;
-    }
-    for( Creature *critter : here.get_creatures_in_radius( pos(), radius ) ) {
-        ret.insert( critter->pos() );
-    }
-
-    return ret;
+        // Avoid nearby creatures if we have the flag.
+        int radius;
+        if( has_flag( mon_flag_PRIORITIZE_TARGETS ) ) {
+            radius = 2;
+        } else if( has_flag( mon_flag_PATH_AVOID_DANGER ) ) {
+            radius = 1;
+        } else {
+            return false;
+        }
+        if( rl_dist( p, pos() ) <= radius && get_creature_tracker().creature_at( p ) ) {
+            return true;
+        }
+        return false;
+    };
 }
 
 double monster::calculate_by_enchantment( double modify, enchant_vals::mod value,

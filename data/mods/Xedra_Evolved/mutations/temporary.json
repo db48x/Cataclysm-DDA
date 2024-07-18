@@ -9,7 +9,7 @@
     "ugliness": 8,
     "mixed_effect": true,
     "description": "Eating that goblin fruit has made you grow to enormous size!",
-    "flags": [ "HUGE" ],
+    "flags": [ "TEMPORARY_SHAPESHIFT", "SHAPESHIFT_SIZE_HUGE" ],
     "restricts_gear": [ "torso", "leg_l", "leg_r", "arm_l", "arm_r", "hand_l", "hand_r", "head", "foot_l", "foot_r" ],
     "social_modifiers": { "intimidate": 15 },
     "enchantments": [
@@ -28,6 +28,22 @@
     "id": "ench_giant_growth_size_bonuses",
     "condition": "ALWAYS",
     "values": [ { "value": "MAX_HP", "multiply": 0.4 }, { "value": "STRENGTH", "add": 6 } ]
+  },
+  {
+    "type": "mutation",
+    "id": "ethereal_wings",
+    "name": { "str": "Ethereal Wings" },
+    "active": true,
+    "points": 1,
+    "visibility": 10,
+    "description": "A wide set of ethereal wings sprouts from your back.  Despite them phasing through every form of matter you've encountered, they still somehow lift you off the ground.  Their mere appearance makes you feel lighter",
+    "valid": false,
+    "starting_trait": false,
+    "purifiable": false,
+    "activated_eocs": [ "EOC_ETHEREAL_WINGS_INITIATE" ],
+    "//": "No body part is intentional.  The wings should not be attackable by enemies or get in the way of clothes or armor.  These are also intended as less of a wide stat boost than the other dream toggleable mutations and instead specifically allow flight and carry weight.",
+    "enchantments": [ { "values": [ { "value": "CARRY_WEIGHT", "add": { "math": [ "2500 * u_spell_level('spell_ethereal_wings')" ] } } ] } ],
+    "flags": [ "GLIDE", "FEATHER_FALL" ]
   },
   {
     "type": "mutation",

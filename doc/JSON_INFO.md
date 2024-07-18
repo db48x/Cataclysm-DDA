@@ -39,6 +39,7 @@ Use the `Home` key to return to the top.
     - [Damage Info Ordering](#damage-info-ordering)
     - [Dreams](#dreams)
     - [Disease](#disease)
+    - [End Screen](#end-screen)
     - [Emitters](#emitters)
     - [Item Groups](#item-groups)
     - [Item Category](#item-category)
@@ -1509,6 +1510,41 @@ Using `damage_info_order` we can reorder how these are shown, and even determine
     "affected_bodyparts": [ "TORSO" ],
     "health_threshold": 100,
     "symptoms": "foodpoison"
+  }
+```
+
+### End Screen
+
+| Identifier           | Description
+|---                   |---
+| `id`                 | (_mandatory_) Unique ID. Must be one continuous word, use underscores if necessary.
+| `priority`           | (_mandatory_) Int used to chose among several end sreens with valid conditions, higher value have higher priority. Priority 0 is the default tombstone end.
+| `picture_id`         | (_mandatory_) ID of an ascii art, see #Ascii_arts.
+| `condition`          | (_mandatory_) Conditions necessary to display this end screen.  See the "Dialogue conditions" section of [NPCs](NPCs.md) for the full syntax.
+| `added_info`         | (_optional_) Vector of pairs of a pair of int character offset and Line number and a string to be written on the end screen. The string can use talk tags, see the "Special Custom Entries" section of [NPCs](NPCs.md) for the full syntax.
+| `last_words_label`   | (_optional_) String used to label the last word input prompt. If left empty no prompt will be displayed.
+
+```json
+  {
+    "type": "end_screen",
+    "id": "death_cross",
+    "priority": 1,
+    "picture_id": "ascii_rip_cross",
+    "condition": {
+      "and": [
+        { "not": "u_is_alive" },
+        {
+          "or": [ { "u_has_item": "holybook_bible1" }, { "u_has_item": "holybook_bible2" }, { "u_has_item": "holybook_bible3" } ]
+        },
+        { "not": { "and": [ { "u_has_trait": "CANNIBAL" }, { "u_has_trait": "PSYCHOPATH" } ] } }
+      ]
+    },
+    "added_info": [
+      [ [ 8, 8 ], "In memory of: <u_name>" ],
+      [ [ 15, 9 ], "Survived: <time_survived>" ],
+      [ [ 17, 10 ], "Kills: <total_kills>" ]
+    ],
+    "last_words_label": "Last Words:"
   }
 ```
 
@@ -3495,6 +3531,7 @@ See [GAME_BALANCE.md](GAME_BALANCE.md)'s `MELEE_WEAPONS` section for the criteri
   ]
 },
 "range" : 5,          // Range when fired
+"recovery_chance": 6, // Percentage of chance to recover the ammo after firing
 "dispersion" : 0,     // Inaccuracy of ammo, measured in 100ths of Minutes Of Angle (MOA)
 "shot_counter": 5,    // Increases amount of shots produced by gun by this amount. `"shot_counter": 5` means each shot will be counted as 6 shots (1 you actually perform + 5); designed for using in suppressor mod breakage and for stuff like replaceable barrels, but not used anywhere at this moment
 "projectile_count": 5,// amount of pellets, that the ammo will shot, like in shotgun-like weapon; if used, shot_damage should be specified
