@@ -5317,7 +5317,6 @@ void iexamine::pay_gas( Character &you, const tripoint &examp )
         }
         pointmenu_cb callback( pumps );
         amenu.callback = &callback;
-        amenu.w_y_setup = 0;
         amenu.query();
         choice = amenu.ret;
 
