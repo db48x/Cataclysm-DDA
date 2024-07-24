@@ -575,14 +575,6 @@ void uilist::calc_data()
         } while( !assigned && hotkey != input_event() );
     }
 
-    vmax = entries.size();
-    unsigned int additional_lines = 0;
-
-    bool has_titlebar = title[0] != '#';
-    if( has_titlebar ) {
-        additional_lines += 1;
-    }
-
     int desc_lines = 0;
     if( desc_enabled ) {
         for( const uilist_entry &ent : entries ) {
@@ -594,14 +586,9 @@ void uilist::calc_data()
             desc_enabled = false;
         }
     }
+    unsigned int additional_lines = 0;
     if( desc_enabled ) {
         additional_lines += desc_lines;
-    }
-
-    if( ( vmax + additional_lines ) * ImGui::GetTextLineHeightWithSpacing() >
-        ImGui::GetMainViewport()->Size.y ) {
-        vmax = ( ImGui::GetMainViewport()->Size.y - additional_lines *
-                 ImGui::GetTextLineHeightWithSpacing() ) / ImGui::GetTextLineHeightWithSpacing();
     }
 
     calculated_menu_size = { 0.0, 0.0 };
@@ -610,8 +597,6 @@ void uilist::calc_data()
                                            ImGui::CalcTextSize( remove_color_tags( entries[fentry].txt ).c_str() ).x );
     }
     calculated_menu_size.x += ImGui::CalcTextSize( " [X] " ).x;
-    calculated_menu_size.y = std::min( ImGui::GetMainViewport()->Size.y,
-                                       vmax * ImGui::GetTextLineHeightWithSpacing() );
 
     extra_space_left = 0.0;
     extra_space_right = 0.0;
@@ -620,7 +605,26 @@ void uilist::calc_data()
         extra_space_right = callback->desired_extra_space_right( ) + ImGui::GetStyle().FramePadding.x;
     }
 
-    calculated_bounds.w = extra_space_left + extra_space_right + calculated_menu_size.x
+    const float width = extra_space_left + extra_space_right + calculated_menu_size.x;
+
+    bool has_titlebar = title[0] != '#';
+    if( has_titlebar ) {
+        additional_lines += std::ceil( ImGui::CalcTextSize( remove_color_tags( title ).c_str() ).x
+                                       / width );
+    }
+    additional_lines += std::ceil( ImGui::CalcTextSize( remove_color_tags( text ).c_str() ).x / width );
+
+    vmax = entries.size();
+    if( ( vmax + additional_lines ) * ImGui::GetTextLineHeightWithSpacing() >
+        ImGui::GetMainViewport()->Size.y ) {
+        vmax = ( ImGui::GetMainViewport()->Size.y - additional_lines *
+                 ImGui::GetTextLineHeightWithSpacing() ) / ImGui::GetTextLineHeightWithSpacing();
+    }
+
+    calculated_menu_size.y = std::min( ImGui::GetMainViewport()->Size.y,
+                                       vmax * ImGui::GetTextLineHeightWithSpacing() );
+
+    calculated_bounds.w = width
                           + 2 * ( ImGui::GetStyle().WindowPadding.x + ImGui::GetStyle().WindowBorderSize );
     calculated_bounds.h = ImGui::GetFrameHeightWithSpacing() + calculated_menu_size.y
                           + ( additional_lines * ImGui::GetTextLineHeightWithSpacing() );
