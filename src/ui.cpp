@@ -606,9 +606,8 @@ void uilist::calc_data()
 
     calculated_menu_size = { 0.0, 0.0 };
     for( int fentry : fentries ) {
-        // this will overestimate if there are any color tags, but that never happens. probably.
         calculated_menu_size.x = std::max( calculated_menu_size.x,
-                                           ImGui::CalcTextSize( entries[fentry].txt.c_str() ).x );
+                                           ImGui::CalcTextSize( remove_color_tags( entries[fentry].txt ).c_str() ).x );
     }
     calculated_menu_size.x += ImGui::CalcTextSize( " [X] " ).x;
     calculated_menu_size.y = std::min( ImGui::GetMainViewport()->Size.y,
@@ -621,7 +620,8 @@ void uilist::calc_data()
         extra_space_right = callback->desired_extra_space_right( ) + ImGui::GetStyle().FramePadding.x;
     }
 
-    calculated_bounds.w = extra_space_left + extra_space_right + calculated_menu_size.x;
+    calculated_bounds.w = extra_space_left + extra_space_right + calculated_menu_size.x
+                          + 2 * ( ImGui::GetStyle().WindowPadding.x + ImGui::GetStyle().WindowBorderSize );
     calculated_bounds.h = ImGui::GetFrameHeightWithSpacing() + calculated_menu_size.y
                           + ( additional_lines * ImGui::GetTextLineHeightWithSpacing() );
 }
