@@ -17,6 +17,7 @@ struct input_event;
 #include "sdl_wrappers.h"
 #include "color_loader.h"
 #endif
+#include "text.h"
 
 struct point;
 struct ImVec2;

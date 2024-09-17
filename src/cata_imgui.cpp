@@ -1,15 +1,11 @@
 #include "cata_imgui.h"
 
-#include <stack>
-#include <type_traits>
-
 #define IMGUI_DEFINE_MATH_OPERATORS
 #include <imgui/imgui.h>
 #include <imgui/imgui_internal.h>
 #undef IMGUI_DEFINE_MATH_OPERATORS
 
 #include "color.h"
-#include "filesystem.h"
 #include "input.h"
 #include "output.h"
 #include "ui_manager.h"
