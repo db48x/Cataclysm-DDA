@@ -3011,6 +3011,7 @@ static std::string color_number( const float num )
         return colorize( "0", c_white );
     }
 }
+
 static void draw_spellbook_info( const spell_type &sp )
 {
     const spell fake_spell( sp.id );
@@ -3031,7 +3032,11 @@ static void draw_spellbook_info( const spell_type &sp )
     ImGui::TextColored( c_yellow, "%s", spell_class.c_str() );
 
     ImGui::NewLine();
-    cataimgui::draw_colored_text( sp.description.translated() );
+    std::vector<std::string> lines = string_split( sp.description.translated(), '\n' );
+    for( std::string &l : lines ) {
+        cataimgui::TextColoredParagraph( c_white, l );
+        ImGui::NewLine();
+    }
     ImGui::NewLine();
 
     cataimgui::draw_colored_text( string_format( "%s: %d", _( "Difficulty" ),
@@ -3119,10 +3124,8 @@ float spellbook_callback::desired_extra_space_right( )
 
 void spellbook_callback::refresh( uilist *menu )
 {
-    ImVec2 info_size = { desired_extra_space_right( ),
-                         desired_extra_space_right( ) * 3.0f * 1.62f
-                       };
     ImGui::TableSetColumnIndex( 2 );
+    ImVec2 info_size = ImGui::GetContentRegionAvail();
     if( ImGui::BeginChild( "spellbook info", info_size, false,
                            ImGuiWindowFlags_AlwaysAutoResize ) ) {
         if( menu->selected >= 0 && static_cast<size_t>( menu->selected ) < spells.size() ) {
