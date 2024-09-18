@@ -1254,6 +1254,10 @@ void display_item_info( const std::vector<iteminfo> &vItemDisplay,
                 }
                 cataimgui::TextColoredParagraph( c_white, i.sFmt, value );
                 bAlreadyHasNewLine = false;
+            } else if( i.sValue != "-999" ) {
+                cataimgui::TextColoredParagraph( get_comparison_color( i, vItemCompare ),
+                                                 i.sValue );
+                bAlreadyHasNewLine = false;
             }
         }
         if( i.bNewLine && !bAlreadyHasNewLine ) {
