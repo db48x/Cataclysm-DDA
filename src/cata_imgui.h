@@ -150,4 +150,6 @@ void init_pair( int p, int f, int b );
 void load_colors();
 #endif
 
+bool RightAlign(const char* str_id);
+void EndRightAlign();
 } // namespace cataimgui

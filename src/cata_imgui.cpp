@@ -804,3 +804,20 @@ void cataimgui::window::clear_filter()
         }
     }
 }
+
+bool cataimgui::RightAlign(const char* str_id)
+{
+    if(ImGui::BeginTable(str_id, 2, ImGuiTableFlags_SizingFixedFit, ImVec2(-1,0)))
+    {
+        ImGui::TableSetupColumn("a", ImGuiTableColumnFlags_WidthStretch);
+
+        ImGui::TableNextColumn();
+        ImGui::TableNextColumn();
+        return true;
+    }
+    return false;
+}
+
+void cataimgui::EndRightAlign() {
+    ImGui::EndTable();
+}
