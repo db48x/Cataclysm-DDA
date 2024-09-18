@@ -64,7 +64,8 @@ Paragraph *parse_colored_text( const std::string &str, nc_color default_color );
 void TextStyled( const Paragraph &para, float wrap_width = 0.0f );
 void TextUnstyled( const Paragraph &para, float wrap_width = 0.0f );
 void TextParagraph( nc_color color, const std::string &para, float wrap_width = 0.0f );
-void TextColoredParagraph( nc_color color, std::string_view str, std::optional<Segment> value = std::nullopt, float wrap_width = 0.0f );
+void TextColoredParagraph( nc_color color, std::string_view str,
+                           std::optional<Segment> value = std::nullopt, float wrap_width = 0.0f );
 } // namespace cataimgui
 
 #endif // CATA_SRC_TEXT_H

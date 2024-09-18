@@ -1185,7 +1185,9 @@ std::string format_item_info( const std::vector<iteminfo> &vItemDisplay,
     return buffer;
 }
 
-static nc_color get_comparison_color( const iteminfo &i, const std::vector<iteminfo> &vItemCompare ) {
+static nc_color get_comparison_color( const iteminfo &i,
+                                      const std::vector<iteminfo> &vItemCompare )
+{
     nc_color thisColor = c_yellow;
     for( const iteminfo &k : vItemCompare ) {
         if( k.sValue != "-999" ) {
@@ -1247,7 +1249,8 @@ void display_item_info( const std::vector<iteminfo> &vItemDisplay,
             if( !i.sFmt.empty() ) {
                 std::optional<cataimgui::Segment> value = std::nullopt;
                 if( i.sValue != "-999" ) {
-                    value = std::make_optional(cataimgui::Segment( i.sValue, get_comparison_color( i, vItemCompare ) ) );
+                    value = std::make_optional( cataimgui::Segment( i.sValue, get_comparison_color( i,
+                                                vItemCompare ) ) );
                 }
                 cataimgui::TextColoredParagraph( c_white, i.sFmt, value );
                 bAlreadyHasNewLine = false;

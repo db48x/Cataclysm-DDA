@@ -960,7 +960,7 @@ class wish_item_callback: public uilist_callback
 
             ImGui::TableSetColumnIndex( 2 );
             ImVec2 info_size = ImGui::GetContentRegionAvail();
-            info_size.y -= (3.0*ImGui::GetTextLineHeightWithSpacing()) - ImGui::GetFrameHeightWithSpacing();
+            info_size.y -= ( 3.0 * ImGui::GetTextLineHeightWithSpacing() ) - ImGui::GetFrameHeightWithSpacing();
 
             if( ImGui::BeginChild( "wish item", info_size ) ) {
                 ImGui::SetCursorPosX( ( info_size.x - ImGui::CalcTextSize( header.c_str() ).x ) * 0.5 );

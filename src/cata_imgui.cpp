@@ -805,11 +805,10 @@ void cataimgui::window::clear_filter()
     }
 }
 
-bool cataimgui::RightAlign(const char* str_id)
+bool cataimgui::RightAlign( const char *str_id )
 {
-    if(ImGui::BeginTable(str_id, 2, ImGuiTableFlags_SizingFixedFit, ImVec2(-1,0)))
-    {
-        ImGui::TableSetupColumn("a", ImGuiTableColumnFlags_WidthStretch);
+    if( ImGui::BeginTable( str_id, 2, ImGuiTableFlags_SizingFixedFit, ImVec2( -1, 0 ) ) ) {
+        ImGui::TableSetupColumn( "a", ImGuiTableColumnFlags_WidthStretch );
 
         ImGui::TableNextColumn();
         ImGui::TableNextColumn();
@@ -818,6 +817,7 @@ bool cataimgui::RightAlign(const char* str_id)
     return false;
 }
 
-void cataimgui::EndRightAlign() {
+void cataimgui::EndRightAlign()
+{
     ImGui::EndTable();
 }

@@ -2460,7 +2460,7 @@ class spellcasting_callback : public uilist_callback
         void refresh( uilist *menu ) override {
             ImGui::TableSetColumnIndex( 2 );
             ImVec2 info_size = ImGui::GetContentRegionAvail();
-            info_size.y -= (1.0*ImGui::GetTextLineHeightWithSpacing()) - ImGui::GetFrameHeightWithSpacing();
+            info_size.y -= ( 1.0 * ImGui::GetTextLineHeightWithSpacing() ) - ImGui::GetFrameHeightWithSpacing();
             if( ImGui::BeginChild( "spell info", info_size, false,
                                    ImGuiWindowFlags_AlwaysAutoResize ) ) {
                 if( menu->hovered >= 0 && static_cast<size_t>( menu->hovered ) < known_spells.size() ) {
@@ -2472,7 +2472,7 @@ class spellcasting_callback : public uilist_callback
                                         _( "Popup Distractions" );
             ImGui::TextColored( casting_ignore ? c_red : c_light_green, "%s %s", "[I]", ignore_string.c_str() );
             ImGui::SameLine();
-            if( cataimgui::RightAlign("hotkeys") ) {
+            if( cataimgui::RightAlign( "hotkeys" ) ) {
                 ImGui::TextColored( c_yellow, "%s", _( "Assign Hotkey [=]" ) );
                 cataimgui::EndRightAlign();
             }

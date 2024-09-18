@@ -11,20 +11,21 @@ static uint32_t u32_from_color( nc_color color )
     return ImGui::ColorConvertFloat4ToU32( color );
 }
 
-namespace cataimgui {
-    Segment::Segment( ) = default;
-    Segment::Segment( const std::string_view( sv ), uint32_t c )
-        : str( sv )
-        , color( c )
-    {}
-    Segment::Segment( const std::string_view( sv ), nc_color c )
-        : str( sv )
-        , color( u32_from_color( c ) )
-    {}
+namespace cataimgui
+{
+Segment::Segment( ) = default;
+Segment::Segment( const std::string_view( sv ), uint32_t c )
+    : str( sv )
+    , color( c )
+{}
+Segment::Segment( const std::string_view( sv ), nc_color c )
+    : str( sv )
+    , color( u32_from_color( c ) )
+{}
 
 Paragraph *parse_colored_text( const std::string &str, nc_color default_color )
 {
-    return (new cataimgui::Paragraph())->append_colored_text( str, default_color );
+    return ( new cataimgui::Paragraph() )->append_colored_text( str, default_color );
 }
 
 Paragraph::Paragraph( )
@@ -49,11 +50,13 @@ Paragraph *Paragraph::append( std::string_view str, nc_color color )
     return append( str, u32_from_color( color ) );
 }
 
-Paragraph *Paragraph::append_colored_text( std::string_view str, nc_color default_color ) {
+Paragraph *Paragraph::append_colored_text( std::string_view str, nc_color default_color )
+{
     return append_colored_text( str, u32_from_color( default_color ) );
 }
 
-Paragraph *Paragraph::append_colored_text( std::string_view str, uint32_t default_color ) {
+Paragraph *Paragraph::append_colored_text( std::string_view str, uint32_t default_color )
+{
     if( str.empty() ) {
         return this;
     }
@@ -88,99 +91,118 @@ Paragraph *Paragraph::append_colored_text( std::string_view str, uint32_t defaul
     return this;
 }
 
-Paragraph *Paragraph::black( std::string_view str ) {
+Paragraph *Paragraph::black( std::string_view str )
+{
     append( str, c_black );
     return this;
 }
 
-Paragraph *Paragraph::white( std::string_view str ) {
+Paragraph *Paragraph::white( std::string_view str )
+{
     append( str, c_white );
     return this;
 }
 
-Paragraph *Paragraph::light_gray( std::string_view str ) {
+Paragraph *Paragraph::light_gray( std::string_view str )
+{
     append( str, c_light_gray );
     return this;
 }
 
-Paragraph *Paragraph::dark_gray( std::string_view str ) {
+Paragraph *Paragraph::dark_gray( std::string_view str )
+{
     append( str, c_dark_gray );
     return this;
 }
 
-Paragraph *Paragraph::red( std::string_view str ) {
+Paragraph *Paragraph::red( std::string_view str )
+{
     append( str, c_red );
     return this;
 }
 
-Paragraph *Paragraph::green( std::string_view str ) {
+Paragraph *Paragraph::green( std::string_view str )
+{
     append( str, c_green );
     return this;
 }
 
-Paragraph *Paragraph::blue( std::string_view str ) {
+Paragraph *Paragraph::blue( std::string_view str )
+{
     append( str, c_blue );
     return this;
 }
 
-Paragraph *Paragraph::cyan( std::string_view str ) {
+Paragraph *Paragraph::cyan( std::string_view str )
+{
     append( str, c_cyan );
     return this;
 }
 
-Paragraph *Paragraph::magenta( std::string_view str ) {
+Paragraph *Paragraph::magenta( std::string_view str )
+{
     append( str, c_magenta );
     return this;
 }
 
-Paragraph *Paragraph::brown( std::string_view str ) {
+Paragraph *Paragraph::brown( std::string_view str )
+{
     append( str, c_brown );
     return this;
 }
 
-Paragraph *Paragraph::light_red( std::string_view str ) {
+Paragraph *Paragraph::light_red( std::string_view str )
+{
     append( str, c_light_red );
     return this;
 }
 
-Paragraph *Paragraph::light_green( std::string_view str ) {
+Paragraph *Paragraph::light_green( std::string_view str )
+{
     append( str, c_light_green );
     return this;
 }
 
-Paragraph *Paragraph::light_blue( std::string_view str ) {
+Paragraph *Paragraph::light_blue( std::string_view str )
+{
     append( str, c_light_blue );
     return this;
 }
 
-Paragraph *Paragraph::light_cyan( std::string_view str ) {
+Paragraph *Paragraph::light_cyan( std::string_view str )
+{
     append( str, c_light_cyan );
     return this;
 }
 
-Paragraph *Paragraph::pink( std::string_view str ) {
+Paragraph *Paragraph::pink( std::string_view str )
+{
     append( str, c_pink );
     return this;
 }
 
-Paragraph *Paragraph::yellow( std::string_view str ) {
+Paragraph *Paragraph::yellow( std::string_view str )
+{
     append( str, c_yellow );
     return this;
 }
 
-Paragraph *Paragraph::spaced() {
+Paragraph *Paragraph::spaced()
+{
     if( !segs.empty() && segs.back().str.back() != ' ' ) {
         append( " ", 0 );
     }
     return this;
 }
 
-Paragraph *Paragraph::separated() {
+Paragraph *Paragraph::separated()
+{
     separator_before = true;
     return this;
 }
 
-static void TextEx( const std::string_view str, float wrap_width, uint32_t color ) {
+static void TextEx( const std::string_view str, float wrap_width, uint32_t color )
+{
     if( str.empty() ) {
         return;
     }
@@ -189,7 +211,7 @@ static void TextEx( const std::string_view str, float wrap_width, uint32_t color
     const char *textEnd = textStart + str.length();
 
     do {
-        float widthRemaining = ImGui::CalcWrapWidthForPos(ImGui::GetCursorScreenPos(), wrap_width);
+        float widthRemaining = ImGui::CalcWrapWidthForPos( ImGui::GetCursorScreenPos(), wrap_width );
         const char *drawEnd = Font->CalcWordWrapPositionA( 1.0f, textStart, textEnd, widthRemaining );
         if( textStart == drawEnd ) {
             ImGui::NewLine();
@@ -225,7 +247,8 @@ static void TextEx( const std::string_view str, float wrap_width, uint32_t color
     } while( true );
 }
 
-static void TextSegmentEx( const Segment &seg, float wrap_width, bool styled) {
+static void TextSegmentEx( const Segment &seg, float wrap_width, bool styled )
+{
     TextEx( seg.str, wrap_width, styled ? seg.color : 0 );
 }
 
@@ -252,7 +275,9 @@ void TextParagraph( nc_color color, const std::string &para, float wrap_width )
     TextEx( para, wrap_width, u32_from_color( color ) );
 }
 
-void TextColoredParagraph( nc_color default_color, const std::string_view str, std::optional<Segment> value, float wrap_width ) {
+void TextColoredParagraph( nc_color default_color, const std::string_view str,
+                           std::optional<Segment> value, float wrap_width )
+{
     if( str.empty() ) {
         return;
     }
@@ -281,7 +306,7 @@ void TextColoredParagraph( nc_color default_color, const std::string_view str, s
                     case color_tag_parse_result::non_color_tag:
                         TextEx( tagname, wrap_width, colors.back() );
                         break;
-                    }
+                }
             }
             s = ce + 1;
         } else {
