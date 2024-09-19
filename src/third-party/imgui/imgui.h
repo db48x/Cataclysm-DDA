@@ -49,7 +49,7 @@ Index of this file:
 #pragma once
 // NOLINTBEGIN
 #pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Werror=old-style-cast"
+#pragma GCC diagnostic ignored "-Wold-style-cast"
 
 // Configuration file with compile-time options
 // (edit imconfig.h or '#define IMGUI_USER_CONFIG "myfilename.h" from your build system')

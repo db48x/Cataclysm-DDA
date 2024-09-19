@@ -33,7 +33,7 @@ struct Paragraph {
 
     Paragraph( );
     explicit Paragraph( std::vector<Segment> &s );
-    explicit Paragraph( const std::string &str );
+    explicit Paragraph( const std::string_view str );
     Paragraph *append( std::string_view str, uint32_t color );
     Paragraph *append( std::string_view str, nc_color color );
     Paragraph *append_colored_text( std::string_view str, uint32_t default_color );
@@ -60,10 +60,10 @@ struct Paragraph {
     Paragraph *separated();
 };
 
-Paragraph *parse_colored_text( const std::string &str, nc_color default_color );
+Paragraph *parse_colored_text( const std::string_view str, nc_color default_color );
 void TextStyled( std::shared_ptr<Paragraph> para, float wrap_width = 0.0f );
 void TextUnstyled( std::shared_ptr<Paragraph> para, float wrap_width = 0.0f );
-void TextParagraph( nc_color color, const std::string &para, float wrap_width = 0.0f );
+void TextParagraph( nc_color color, const std::string_view para, float wrap_width = 0.0f );
 void TextColoredParagraph( nc_color color, std::string_view str,
                            std::optional<Segment> value = std::nullopt, float wrap_width = 0.0f );
 

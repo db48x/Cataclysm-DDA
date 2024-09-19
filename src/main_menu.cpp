@@ -75,10 +75,10 @@ class demo_ui : public cataimgui::window
 
 demo_ui::demo_ui() : cataimgui::window( _( "ImGui Demo Screen" ) )
 {
-    // char *text = "Some long text that will wrap around nicely. </color><color_green><color_red>Some red text in the </color>middle.</color> Some long text that will <color_light_blue_yellow>wrap around nicely.";
+    // char *text = "Some long text that will wrap around nicely. </color> <color_green><color_red>Some red text in the </color>middle.</color>  Some long text that will <color_light_blue_yellow>wrap around nicely.";
     std::string text =
-        "Some long text that will wrap around nicely. <color_red>Some red text in the middle.</color> Some long text that will wrap around nicely.";
-    stuff = std::shared_ptr<cataimgui::Paragraph>( new cataimgui::Paragraph() );
+        "Some long text that will wrap around nicely.  <color_red>Some red text in the middle.</color>  Some long text that will wrap around nicely.";
+    stuff = std::make_shared<cataimgui::Paragraph>();
     stuff->append_colored_text( text, c_white );
 }
 
@@ -127,7 +127,7 @@ void demo_ui::draw_controls()
         if( ImGui::CollapsingHeader( "Plain wrapped text" ) ) {
             WRAP_START();
             ImGui::TextWrapped( "%s",
-                                "Some long text that will wrap around nicely. Some red text in the middle. Some long text that will wrap around nicely." );
+                                "Some long text that will wrap around nicely.  Some red text in the middle.  Some long text that will wrap around nicely." );
             WRAP_END();
             ImGui::NewLine();
         }
@@ -149,8 +149,8 @@ void demo_ui::draw_controls()
         if( ImGui::CollapsingHeader( "Styled Paragraph, no allocations" ) ) {
             WRAP_START();
             cataimgui::TextParagraph( c_white, "Some long text that will wrap around nicely.", wrap_width );
-            cataimgui::TextParagraph( c_red, " Some red text in the middle.", wrap_width );
-            cataimgui::TextParagraph( c_white, " Some long text that will wrap around nicely.", wrap_width );
+            cataimgui::TextParagraph( c_red, "  Some red text in the middle.", wrap_width );
+            cataimgui::TextParagraph( c_white, "  Some long text that will wrap around nicely.", wrap_width );
             ImGui::NewLine();
             WRAP_END();
             ImGui::NewLine();

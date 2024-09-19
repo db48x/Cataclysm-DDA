@@ -44,7 +44,7 @@ Index of this file:
 #pragma once
 // NOLINTBEGIN
 #pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Werror=old-style-cast"
+#pragma GCC diagnostic ignored "-Wold-style-cast"
 
 #ifndef IMGUI_DISABLE
 

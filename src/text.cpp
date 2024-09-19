@@ -23,7 +23,7 @@ Segment::Segment( const std::string_view( sv ), nc_color c )
     , color( u32_from_color( c ) )
 {}
 
-Paragraph *parse_colored_text( const std::string &str, nc_color default_color )
+Paragraph *parse_colored_text( const std::string_view str, nc_color default_color )
 {
     return ( new cataimgui::Paragraph() )->append_colored_text( str, default_color );
 }
@@ -34,7 +34,7 @@ Paragraph::Paragraph( )
 Paragraph::Paragraph( std::vector<Segment> &s )
     : segs( s )
 {};
-Paragraph::Paragraph( const std::string &str )
+Paragraph::Paragraph( const std::string_view str )
 {
     append_colored_text( str, 0 );
 }
@@ -254,7 +254,7 @@ static void TextSegmentEx( const Segment &seg, float wrap_width, bool styled )
 
 static void TextParagraphEx( std::shared_ptr<Paragraph> &para, float wrap_width, bool styled )
 {
-    for( const auto &seg : para->segs ) {
+    for( const Segment &seg : para->segs ) {
         TextSegmentEx( seg, wrap_width, styled );
     }
     ImGui::NewLine();
@@ -270,7 +270,7 @@ void TextUnstyled( std::shared_ptr<Paragraph> para, float wrap_width )
     TextParagraphEx( para, wrap_width, false );
 }
 
-void TextParagraph( nc_color color, const std::string &para, float wrap_width )
+void TextParagraph( nc_color color, const std::string_view para, float wrap_width )
 {
     TextEx( para, wrap_width, u32_from_color( color ) );
 }
