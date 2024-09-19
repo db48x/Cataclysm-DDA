@@ -252,20 +252,20 @@ static void TextSegmentEx( const Segment &seg, float wrap_width, bool styled )
     TextEx( seg.str, wrap_width, styled ? seg.color : 0 );
 }
 
-static void TextParagraphEx( const Paragraph &para, float wrap_width, bool styled )
+static void TextParagraphEx( std::shared_ptr<Paragraph> &para, float wrap_width, bool styled )
 {
-    for( const auto &seg : para.segs ) {
+    for( const auto &seg : para->segs ) {
         TextSegmentEx( seg, wrap_width, styled );
     }
     ImGui::NewLine();
 }
 
-void TextStyled( const Paragraph &para, float wrap_width )
+void TextStyled( std::shared_ptr<Paragraph> para, float wrap_width )
 {
     TextParagraphEx( para, wrap_width, true );
 }
 
-void TextUnstyled( const Paragraph &para, float wrap_width )
+void TextUnstyled( std::shared_ptr<Paragraph> para, float wrap_width )
 {
     TextParagraphEx( para, wrap_width, false );
 }

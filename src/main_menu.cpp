@@ -53,7 +53,6 @@
 #include "wcwidth.h"
 #include "worldfactory.h"
 
-#include "cata_imgui.h"
 #include "imgui/imgui.h"
 
 class demo_ui : public cataimgui::window
@@ -71,15 +70,15 @@ class demo_ui : public cataimgui::window
         };
 
     private:
-        cataimgui::Paragraph stuff;
+        std::shared_ptr<cataimgui::Paragraph> stuff;
 };
 
 demo_ui::demo_ui() : cataimgui::window( _( "ImGui Demo Screen" ) )
 {
-    // stuff = cata_imgui::parse_colored_text( "Some long text that will wrap around nicely. </color><color_green><color_red>Some red text in the </color>middle.</color> Some long text that will <color_light_blue_yellow>wrap around nicely.", c_white );
-    stuff = *( new
-               cataimgui::Paragraph() )->append_colored_text( "Some long text that will wrap around nicely. <color_red>Some red text in the middle.</color> Some long text that will wrap around nicely.",
-                       c_white );
+    // char *text = "Some long text that will wrap around nicely. </color><color_green><color_red>Some red text in the </color>middle.</color> Some long text that will <color_light_blue_yellow>wrap around nicely.";
+    std::string text = "Some long text that will wrap around nicely. <color_red>Some red text in the middle.</color> Some long text that will wrap around nicely.";
+    stuff = std::shared_ptr<cataimgui::Paragraph>(new cataimgui::Paragraph());
+    stuff->append_colored_text( text, c_white );
 }
 
 cataimgui::bounds demo_ui::get_bounds()
