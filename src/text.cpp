@@ -33,7 +33,7 @@ Paragraph::Paragraph( )
 {}
 Paragraph::Paragraph( std::vector<Segment> &s )
     : segs( s )
-{};
+{}
 Paragraph::Paragraph( const std::string_view str )
 {
     append_colored_text( str, 0 );
