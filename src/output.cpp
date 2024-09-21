@@ -1235,7 +1235,16 @@ void display_item_info( const std::vector<iteminfo> &vItemDisplay,
                     }
                     ImGui::Separator();
                 } else {
-                    cataimgui::TextColoredParagraph( c_white, i.sName );
+                    if( i.sName.find( '\n' ) != std::string::npos ) {
+                        std::vector<std::string> lines = string_split( i.sName, '\n' );
+                        for( std::string &line : lines ) {
+                            cataimgui::TextColoredParagraph( c_white, line );
+                            ImGui::NewLine();
+                        }
+                        ImGui::SameLine();
+                    } else {
+                        cataimgui::TextColoredParagraph( c_white, i.sName );
+                    }
                     bAlreadyHasNewLine = false;
                 }
             }
