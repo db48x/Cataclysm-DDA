@@ -23,9 +23,11 @@ Segment::Segment( const std::string_view( sv ), nc_color c )
     , color( u32_from_color( c ) )
 {}
 
-Paragraph *parse_colored_text( const std::string_view str, nc_color default_color )
+std::shared_ptr<Paragraph> parse_colored_text( const std::string_view str, nc_color default_color )
 {
-    return ( new cataimgui::Paragraph() )->append_colored_text( str, default_color );
+    std::shared_ptr<Paragraph> p = std::make_shared<Paragraph>();
+    p->append_colored_text( str, default_color );
+    return p;
 }
 
 Paragraph::Paragraph( )

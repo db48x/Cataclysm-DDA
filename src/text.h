@@ -60,7 +60,7 @@ struct Paragraph {
     Paragraph *separated();
 };
 
-Paragraph *parse_colored_text( std::string_view str, nc_color default_color );
+std::shared_ptr<Paragraph> parse_colored_text( std::string_view str, nc_color default_color );
 void TextStyled( std::shared_ptr<Paragraph> para, float wrap_width = 0.0f );
 void TextUnstyled( std::shared_ptr<Paragraph> para, float wrap_width = 0.0f );
 void TextParagraph( nc_color color, std::string_view para, float wrap_width = 0.0f );
